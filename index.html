@@ -127,7 +127,6 @@
             pointer-events: none;
         }
         
-        /* Disable skip overlay click block except for the checkbox */
         .question-card.skipped-card .skip-toggle { pointer-events: auto; }
 
         .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -142,9 +141,10 @@
         
         /* Content Styling */
         .q-text { font-size: 1.1rem; margin-bottom: 20px; font-weight: 600; }
+        .sub-question { background: #f8fafc; padding: 15px; border-right: 4px solid var(--primary-light); margin-bottom: 20px; border-radius: 8px; }
         
         .mcq-option {
-            display: block; padding: 15px; border: 2px solid var(--background); border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; font-weight: 600;
+            display: block; padding: 12px; border: 2px solid var(--background); border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; font-weight: 600;
         }
         .mcq-option:hover { border-color: var(--primary-light); background: #eff6ff; }
         .mcq-option input { margin-inline-end: 10px; transform: scale(1.2); }
@@ -176,7 +176,7 @@
         .english-text { display: none; }
         .en-mode .arabic-text { display: none; }
         .en-mode .english-text { display: inline-block; }
-        .en-mode { direction: ltr; }
+        .en-mode { direction: ltr; text-align: left;}
 
         /* Animations */
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -249,54 +249,86 @@
                 <span class="english-text">Part One: Theory (35 Marks) - Answer 5 Questions (Skip One)</span>
             </h2>
 
-            <!-- Q1: MCQ -->
+            <!-- Q1: MCQ (All 9 Questions) -->
             <div class="question-card" id="q1">
                 <div class="question-header">
-                    <h3>Q1: Choose the correct answer (7 Marks)</h3>
+                    <h3>Q1: Choose the correct answer for the following (9 Marks)</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q1')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
                     </label>
                 </div>
 
-                <div class="mcq-item" data-correct="b">
-                    <p class="q-text">1. If an S-R latch has a 0 on the R input and a 1 on the S input and then the S input goes to 0, the latch will be:</p>
-                    <label class="mcq-option"><input type="radio" name="q1_1" value="a"> (a) reset</label>
-                    <label class="mcq-option"><input type="radio" name="q1_1" value="b"> (b) set</label>
+                <div class="mcq-item" data-correct="a">
+                    <p class="q-text">1. If an S-R latch has a 1 on the $S$ input and a 0 on the $R$ input and then the $S$ input goes to 0, the latch will be:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="a"> (a) set</label>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="b"> (b) reset</label>
                     <label class="mcq-option"><input type="radio" name="q1_1" value="c"> (c) invalid</label>
                     <label class="mcq-option"><input type="radio" name="q1_1" value="d"> (d) clear</label>
                 </div>
 
-                <div class="mcq-item" data-correct="c" style="margin-top:20px;">
+                <div class="mcq-item" data-correct="c" style="margin-top:15px;">
                     <p class="q-text">2. The invalid state of an S-R latch occurs when:</p>
-                    <label class="mcq-option"><input type="radio" name="q1_2" value="a"> (a) S = 0, R = 0</label>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="a"> (a) S = 1, R = 0</label>
                     <label class="mcq-option"><input type="radio" name="q1_2" value="b"> (b) S = 0, R = 1</label>
                     <label class="mcq-option"><input type="radio" name="q1_2" value="c"> (c) S = 1, R = 1</label>
-                    <label class="mcq-option"><input type="radio" name="q1_2" value="d"> (d) S = 1, R = 0</label>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="d"> (d) S = 0, R = 0</label>
                 </div>
 
-                <div class="mcq-item" data-correct="b" style="margin-top:20px;">
-                    <p class="q-text">3. Like the latch, the flip-flop belongs to a category of logic circuits known as:</p>
-                    <label class="mcq-option"><input type="radio" name="q1_3" value="a"> (a) monostable multivibrators</label>
-                    <label class="mcq-option"><input type="radio" name="q1_3" value="b"> (b) bistable multivibrators</label>
-                    <label class="mcq-option"><input type="radio" name="q1_3" value="c"> (c) astable multivibrators</label>
-                    <label class="mcq-option"><input type="radio" name="q1_3" value="d"> (d) one-shots</label>
+                <div class="mcq-item" data-correct="d" style="margin-top:15px;">
+                    <p class="q-text">3. For a gated D latch, the $Q$ output always equals the $D$ input:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="a"> (a) before the enable pulse</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="b"> (b) during the enable pulse</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="c"> (c) immediately after the enable pulse</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="d"> (d) answers (b) and (c)</label>
                 </div>
 
-                <div class="mcq-item" data-correct="d" style="margin-top:20px;">
-                    <p class="q-text">4. The purpose of the clock in a flip-flop is to:</p>
-                    <label class="mcq-option"><input type="radio" name="q1_4" value="a"> (a) clear the device</label>
-                    <label class="mcq-option"><input type="radio" name="q1_4" value="b"> (b) allow the output to change states</label>
-                    <label class="mcq-option"><input type="radio" name="q1_4" value="c"> (c) always cause the output to change states</label>
-                    <label class="mcq-option"><input type="radio" name="q1_4" value="d"> (d) cause the output to assume a state dependent on the controlling (S-R, J-K) device</label>
+                <div class="mcq-item" data-correct="b" style="margin-top:15px;">
+                    <p class="q-text">4. Like the latch, the flip-flop belongs to a category of logic circuits known as:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="a"> (a) monostable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="b"> (b) bistable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="c"> (c) astable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="d"> (d) one-shots</label>
                 </div>
 
-                <div class="mcq-item" data-correct="b" style="margin-top:20px;">
-                    <p class="q-text">5. A feature that distinguishes the J-K flip-flop from the S-R flip-flop is the:</p>
-                    <label class="mcq-option"><input type="radio" name="q1_5" value="a"> (a) type of clock</label>
-                    <label class="mcq-option"><input type="radio" name="q1_5" value="b"> (b) toggle condition</label>
-                    <label class="mcq-option"><input type="radio" name="q1_5" value="c"> (c) preset input</label>
-                    <label class="mcq-option"><input type="radio" name="q1_5" value="d"> (d) reset input</label>
+                <div class="mcq-item" data-correct="d" style="margin-top:15px;">
+                    <p class="q-text">5. The purpose of the clock input to a flip-flop is to:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="a"> (a) clear the device</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="b"> (b) set the device</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="c"> (c) always cause the output to change states</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="d"> (d) cause the output to assume a state dependent on the controlling (S-R, J-K, or D) inputs.</label>
+                </div>
+
+                <div class="mcq-item" data-correct="d" style="margin-top:15px;">
+                    <p class="q-text">6. For an edge-triggered D flip-flop,</p>
+                    <label class="mcq-option"><input type="radio" name="q1_6" value="a"> (a) a change in the state of the flip-flop can occur only at a clock pulse edge</label>
+                    <label class="mcq-option"><input type="radio" name="q1_6" value="b"> (b) the state that the flip-flop goes to depends on the D input</label>
+                    <label class="mcq-option"><input type="radio" name="q1_6" value="c"> (c) the output follows the input at each clock pulse</label>
+                    <label class="mcq-option"><input type="radio" name="q1_6" value="d"> (d) all of these answers</label>
+                </div>
+
+                <div class="mcq-item" data-correct="a" style="margin-top:15px;">
+                    <p class="q-text">7. A feature that distinguishes the J-K flip-flop from the S-R flip-flop is the:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_7" value="a"> (a) toggle condition</label>
+                    <label class="mcq-option"><input type="radio" name="q1_7" value="b"> (b) preset input</label>
+                    <label class="mcq-option"><input type="radio" name="q1_7" value="c"> (c) type of clock</label>
+                    <label class="mcq-option"><input type="radio" name="q1_7" value="d"> (d) clear input</label>
+                </div>
+
+                <div class="mcq-item" data-correct="b" style="margin-top:15px;">
+                    <p class="q-text">8. A flip-flop is in the toggle condition when:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_8" value="a"> (a) J = 1, K = 0</label>
+                    <label class="mcq-option"><input type="radio" name="q1_8" value="b"> (b) J = 1, K = 1</label>
+                    <label class="mcq-option"><input type="radio" name="q1_8" value="c"> (c) J = 0, K = 0</label>
+                    <label class="mcq-option"><input type="radio" name="q1_8" value="d"> (d) J = 0, K = 1</label>
+                </div>
+
+                <div class="mcq-item" data-correct="d" style="margin-top:15px;">
+                    <p class="q-text">9. A J-K flip-flop with J = 1 and K = 1 has a 10 kHz clock input. The Q output is:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_9" value="a"> (a) constantly HIGH</label>
+                    <label class="mcq-option"><input type="radio" name="q1_9" value="b"> (b) constantly LOW</label>
+                    <label class="mcq-option"><input type="radio" name="q1_9" value="c"> (c) a 10 kHz square wave</label>
+                    <label class="mcq-option"><input type="radio" name="q1_9" value="d"> (d) a 5 kHz square wave</label>
                 </div>
 
                 <button class="btn-solution" onclick="checkMCQ()">
@@ -306,13 +338,13 @@
                 </button>
 
                 <div class="solution-box" id="sol-q1">
-                    <strong><i class="fa-solid fa-lightbulb"></i> <span class="arabic-text">التفسير المنطقي:</span><span class="english-text">Logical Explanation:</span></strong>
+                    <strong><i class="fa-solid fa-lightbulb"></i> <span class="arabic-text">ملاحظات الحل:</span><span class="english-text">Solution Notes:</span></strong>
                     <ul style="list-style-position: inside; margin-top: 10px;">
-                        <li>1. <strong>Set:</strong> When S=1 and R=0, it's Set. Returning S to 0 triggers the "Hold" state, keeping it Set.</li>
-                        <li>2. <strong>S=1, R=1:</strong> This is the invalid/forbidden state in S-R latches.</li>
-                        <li>3. <strong>Bistable:</strong> Flip flops and latches have two stable states (0 and 1).</li>
-                        <li>4. <strong>Clock purpose:</strong> Synchronizes state changes, causing the output to assume a state dependent on the controlling inputs.</li>
-                        <li>5. <strong>Toggle:</strong> J-K allows J=1, K=1 to toggle the output, solving the S-R invalid state issue.</li>
+                        <li>1. When S returns to 0, the latch remains in its previous state (Hold), so it remains <strong>Set</strong>.</li>
+                        <li>2. <strong>S=1, R=1</strong> is the invalid/forbidden state in S-R latches.</li>
+                        <li>4. <strong>Bistable:</strong> Flip flops have two stable states.</li>
+                        <li>8. <strong>Toggle:</strong> J=1, K=1 is the toggle mode unique to J-K flip-flops.</li>
+                        <li>9. In toggle mode, the flip-flop acts as a frequency divider ($output = \frac{1}{2} input$). So $10 \text{ kHz} / 2 = \mathbf{5 \text{ kHz}}$.</li>
                     </ul>
                 </div>
             </div>
@@ -320,17 +352,20 @@
             <!-- Q2: Calculations -->
             <div class="question-card" id="q2">
                 <div class="question-header">
-                    <h3>Q2: Propagation Delay & Frequency (7 Marks)</h3>
+                    <h3>Q2: Propagation Delay & Frequency Calculations</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q2')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
                     </label>
                 </div>
-                <p class="q-text">An asynchronous binary counter is implemented using 6 flip-flops. Each flip-flop has a propagation delay $t_{pd}$ of 12 nano seconds (ns). Calculate:</p>
-                <ol style="margin-right: 25px; direction: ltr; text-align: left; font-weight: bold;">
-                    <li>The total propagation delay ($t_{p,total}$).</li>
-                    <li>The maximum clock frequency ($f_{max}$) at which the counter can be operated.</li>
-                </ol>
+                
+                <div class="sub-question">
+                    <p class="q-text"><strong>A)</strong> A 4-bit asynchronous binary counter. Each J-K Flip-Flop is Positive edge-triggered and has a propagation delay for 10 ns. Calculate the total propagation delay ($t_{p,total}$) and maximum clock frequency ($f_{max}$).</p>
+                </div>
+
+                <div class="sub-question">
+                    <p class="q-text"><strong>B)</strong> An asynchronous binary counter is implemented using 6 flip-flops. Each flip-flop has a propagation delay $t_{pd}$ of 12 ns. Calculate the total propagation delay ($t_{p,total}$) and maximum clock frequency ($f_{max}$).</p>
+                </div>
                 
                 <button class="btn-solution" onclick="toggleSol('sol-q2')">
                     <i class="fa-solid fa-calculator"></i>
@@ -340,40 +375,41 @@
                 
                 <div class="solution-box" id="sol-q2">
                     <div class="arabic-text">
-                        <p><strong>طريقة الحل:</strong></p>
-                        <p>بما أنه عداد غير متزامن (Asynchronous)، فإن التأخير تراكمي. نضرب عدد القلابات في زمن التأخير للقلاب الواحد.</p>
+                        <p><strong>طريقة الحل:</strong> بما أنه عداد غير متزامن (Asynchronous)، فإن التأخير تراكمي. نضرب عدد القلابات في زمن التأخير للقلاب الواحد.</p>
                     </div>
                     <div class="english-text">
-                        <p><strong>Solution Steps:</strong></p>
-                        <p>Since it is an asynchronous counter, the delay is cumulative.</p>
+                        <p><strong>Solution:</strong> For asynchronous counters, delay is cumulative. $t_{p,total} = n \times t_{pd}$.</p>
                     </div>
+                    
+                    <h4 style="margin-top: 15px;">Solution A (4-bit, 10ns):</h4>
                     <div class="math-block">
-                        1. Total Propagation Delay ($t_{p,total}$):<br>
-                        $n = 6$ (flip-flops)<br>
-                        $t_{pd} = 12 \text{ ns}$<br>
-                        $t_{p,total} = n \times t_{pd}$<br>
-                        $t_{p,total} = 6 \times 12 \text{ ns} = \mathbf{72 \text{ ns}}$
+                        1. Total Delay: $t_{p,total} = 4 \times 10 \text{ ns} = \mathbf{40 \text{ ns}}$<br>
+                        2. Max Frequency: $f_{max} = \frac{1}{t_{p,total}} = \frac{1}{40 \times 10^{-9} \text{ s}} = \mathbf{25 \text{ MHz}}$
                     </div>
+
+                    <h4 style="margin-top: 15px;">Solution B (6-bit, 12ns):</h4>
                     <div class="math-block">
-                        2. Maximum Clock Frequency ($f_{max}$):<br>
-                        The maximum frequency is the reciprocal of the total delay time.<br>
-                        $f_{max} = \frac{1}{t_{p,total}}$<br>
-                        $f_{max} = \frac{1}{72 \text{ ns}} = \frac{1}{72 \times 10^{-9} \text{ s}}$<br>
-                        $f_{max} \approx \mathbf{13.88 \text{ MHz}}$
+                        1. Total Delay: $t_{p,total} = 6 \times 12 \text{ ns} = \mathbf{72 \text{ ns}}$<br>
+                        2. Max Frequency: $f_{max} = \frac{1}{t_{p,total}} = \frac{1}{72 \times 10^{-9} \text{ s}} \approx \mathbf{13.88 \text{ MHz}}$
                     </div>
                 </div>
             </div>
 
-            <!-- Q3: Combinational Design -->
+            <!-- Q3: Arithmetic Logic Design -->
             <div class="question-card" id="q3">
                 <div class="question-header">
-                    <h3>Q3: Combinational Logic Design (7 Marks)</h3>
+                    <h3>Q3: Arithmetic Logic Design</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q3')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
                     </label>
                 </div>
-                <p class="q-text">Design a Half Subtractor (A-B) circuit. Provide its Truth Table and Boolean Expressions.</p>
+                <div class="sub-question">
+                    <p class="q-text"><strong>A)</strong> Design a Half Subtractor (A-B) circuit. Provide its Truth Table and Boolean Expressions.</p>
+                </div>
+                <div class="sub-question">
+                    <p class="q-text"><strong>B)</strong> Design a Full Subtractor (A-B-C) circuit. Provide its Truth Table and Boolean Expressions.</p>
+                </div>
                 
                 <button class="btn-solution" onclick="toggleSol('sol-q3')">
                     <i class="fa-solid fa-table"></i>
@@ -382,31 +418,34 @@
                 </button>
 
                 <div class="solution-box" id="sol-q3">
-                    <h4 style="text-align:center; color: var(--primary);">Truth Table of Half-Subtractor</h4>
+                    <h4 style="color: var(--primary);">A) Half-Subtractor</h4>
                     <table>
-                        <tr>
-                            <th colspan="2">Inputs</th>
-                            <th colspan="2">Outputs</th>
-                        </tr>
-                        <tr>
-                            <th>A</th>
-                            <th>B</th>
-                            <th>Difference (D)</th>
-                            <th>Borrow ($B_{out}$)</th>
-                        </tr>
+                        <tr><th>A</th><th>B</th><th>Diff (D)</th><th>Borrow ($B_{out}$)</th></tr>
                         <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
                         <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
                         <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
                         <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
                     </table>
-
-                    <div class="arabic-text"><p><strong>المعادلات المنطقية:</strong></p></div>
-                    <div class="english-text"><p><strong>Boolean Expressions:</strong></p></div>
                     <div class="math-block">
-                        Difference ($D$):<br>
-                        $D = \overline{A}B + A\overline{B} = A \oplus B$<br><br>
-                        Borrow ($B_{out}$):<br>
+                        $D = A \oplus B$<br>
                         $B_{out} = \overline{A}B$
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 25px;">B) Full-Subtractor</h4>
+                    <table>
+                        <tr><th>A</th><th>B</th><th>$B_{in}$</th><th>Diff (D)</th><th>Borrow ($B_{out}$)</th></tr>
+                        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                        <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                        <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                        <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                    </table>
+                    <div class="math-block">
+                        $D = \overline{A}\overline{B}B_{in} + \overline{A}B\overline{B}_{in} + A\overline{B}\overline{B}_{in} + ABB_{in}$<br>
+                        $B_{out} = \overline{A}\overline{B}B_{in} + \overline{A}B\overline{B}_{in} + \overline{A}BB_{in} + ABB_{in}$
                     </div>
                 </div>
             </div>
@@ -414,7 +453,7 @@
             <!-- Q4: Counters Design -->
             <div class="question-card" id="q4">
                 <div class="question-header">
-                    <h3>Q4: Counters Design (7 Marks)</h3>
+                    <h3>Q4: Synchronous Counters Design</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q4')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
@@ -466,13 +505,18 @@
             <!-- Q5: Decoders & Encoders -->
             <div class="question-card" id="q5">
                 <div class="question-header">
-                    <h3>Q5: Decoders & Encoders (7 Marks)</h3>
+                    <h3>Q5: Decoders & Encoders</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q5')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
                     </label>
                 </div>
-                <p class="q-text">Design a (2-to-4) line decoder circuit. Provide its Truth Table and Boolean Expressions.</p>
+                <div class="sub-question">
+                    <p class="q-text"><strong>A)</strong> Design a (2-to-4) line decoder circuit. Provide its Truth Table and Boolean Expressions.</p>
+                </div>
+                <div class="sub-question">
+                    <p class="q-text"><strong>B)</strong> Design a (4-to-2) line encoder circuit. Provide its Truth Table and Boolean Expressions.</p>
+                </div>
                 
                 <button class="btn-solution" onclick="toggleSol('sol-q5')">
                     <i class="fa-solid fa-list"></i>
@@ -481,40 +525,59 @@
                 </button>
 
                 <div class="solution-box" id="sol-q5">
+                    <h4 style="color: var(--primary);">A) 2-to-4 Line Decoder</h4>
                     <table>
                         <tr>
-                            <th colspan="2">Inputs</th>
-                            <th colspan="4">Outputs</th>
+                            <th colspan="2">Inputs</th><th colspan="4">Outputs</th>
                         </tr>
                         <tr>
-                            <th>A</th><th>B</th>
-                            <th>$D_0$</th><th>$D_1$</th><th>$D_2$</th><th>$D_3$</th>
+                            <th>A</th><th>B</th><th>$D_0$</th><th>$D_1$</th><th>$D_2$</th><th>$D_3$</th>
                         </tr>
                         <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
                         <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
                         <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
                         <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
                     </table>
-
                     <div class="math-block">
-                        $D_0 = \overline{A} \cdot \overline{B}$<br>
-                        $D_1 = \overline{A} \cdot B$<br>
-                        $D_2 = A \cdot \overline{B}$<br>
-                        $D_3 = A \cdot B$
+                        $D_0 = \overline{A}\overline{B}$ &nbsp;|&nbsp; $D_1 = \overline{A}B$<br>
+                        $D_2 = A\overline{B}$ &nbsp;|&nbsp; $D_3 = AB$
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 25px;">B) 4-to-2 Line Encoder</h4>
+                    <table>
+                        <tr>
+                            <th colspan="4">Inputs</th><th colspan="2">Outputs</th>
+                        </tr>
+                        <tr>
+                            <th>$D_0$</th><th>$D_1$</th><th>$D_2$</th><th>$D_3$</th><th>A</th><th>B</th>
+                        </tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                        <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                        <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                    </table>
+                    <div class="math-block">
+                        $A = D_2 + D_3$<br>
+                        $B = D_1 + D_3$
                     </div>
                 </div>
             </div>
 
-            <!-- Q6: Latch Design (Added to complete the 6 questions) -->
+            <!-- Q6: Flip-Flops & Latches Design -->
             <div class="question-card" id="q6">
                 <div class="question-header">
-                    <h3>Q6: Sequential Logic Gates (7 Marks)</h3>
+                    <h3>Q6: Sequential Components Conversion & Design</h3>
                     <label class="skip-toggle" onclick="event.stopPropagation();">
                         <input type="checkbox" onchange="handleSkip(this, 'q6')"> 
                         <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
                     </label>
                 </div>
-                <p class="q-text">Using NAND gates only to design D flip-flops with truth table.</p>
+                <div class="sub-question">
+                    <p class="q-text"><strong>A)</strong> Design a T Flip flop using JK Flip flop. Show the truth table and conversion equations.</p>
+                </div>
+                <div class="sub-question">
+                    <p class="q-text"><strong>B)</strong> Using NAND gates only, design a D flip-flop with its truth table.</p>
+                </div>
                 
                 <button class="btn-solution" onclick="toggleSol('sol-q6')">
                     <i class="fa-solid fa-microchip"></i>
@@ -523,21 +586,32 @@
                 </button>
 
                 <div class="solution-box" id="sol-q6">
-                    <div class="arabic-text">
-                        <p><strong>شرح التصميم:</strong></p>
-                        <p>يتم بناء (D Flip-Flop) باستخدام قلاب (S-R Gated Latch) مكوّن من بوابات NAND، مع توصيل المدخل S كـ D، والمدخل R يكون عكس D (موصول ببوابة NOT التي يمكن بناؤها أيضاً من NAND).</p>
-                    </div>
-                    <div class="english-text">
-                        <p><strong>Design Explanation:</strong></p>
-                        <p>A D Flip-Flop is built using a NAND-based S-R Gated Latch, where the S input is connected directly to D, and the R input receives the inverted D signal.</p>
-                    </div>
-                    <h4 style="margin-top: 15px; color: var(--primary);">Truth Table of D Flip-Flop</h4>
+                    <h4 style="color: var(--primary);">A) T Flip-Flop from J-K</h4>
+                    <div class="arabic-text"><p>يتم تحويل JK إلى T عن طريق دمج المدخلين J و K معاً بحيث يكون $J=T$ و $K=T$.</p></div>
+                    <div class="english-text"><p>A JK flip-flop is converted to a T flip-flop by tying the J and K inputs together ($J=T, K=T$).</p></div>
                     <table>
                         <tr>
-                            <th colspan="2">Inputs</th>
-                            <th colspan="2">Outputs</th>
-                            <th>Comments</th>
+                            <th>T</th><th>$Q(t)$</th><th>$Q(t+1)$</th><th>J</th><th>K</th>
                         </tr>
+                        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>X</td></tr>
+                        <tr><td>0</td><td>1</td><td>1</td><td>X</td><td>0</td></tr>
+                        <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>X</td></tr>
+                        <tr><td>1</td><td>1</td><td>0</td><td>X</td><td>1</td></tr>
+                    </table>
+                    <div class="math-block">
+                        $J = T$<br>
+                        $K = T$<br>
+                        $Q(t+1) = T \oplus Q(t)$
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 25px;">B) D Flip-Flop using NAND</h4>
+                    <div class="arabic-text">
+                        <p>يتم بناء (D Flip-Flop) بتوصيل S كـ D، والمدخل R يكون عكس D.</p>
+                    </div>
+                    <div class="english-text">
+                        <p>Built using a NAND S-R Gated Latch, where S = D, and R is inverted D.</p>
+                    </div>
+                    <table>
                         <tr>
                             <th>CLK / EN</th><th>D</th>
                             <th>$Q(t+1)$</th><th>$Q'(t+1)$</th>
