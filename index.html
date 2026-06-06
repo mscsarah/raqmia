@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>امتحان الأنظمة الرقمية الاحترافي | Pro Digital Systems Exam</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax Configuration for inline $...$ and display $$...$$ -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #cbd5e1;
+            --radius: 16px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding-bottom: 50px;
+        }
+
+        /* Top Navigation */
+        nav {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand { display: flex; align-items: center; gap: 15px; }
+        .nav-brand i { font-size: 1.8rem; }
+        .nav-brand h1 { font-size: 1.4rem; margin: 0; }
+        
+        .nav-controls { display: flex; align-items: center; gap: 20px; }
+        .timer { font-size: 1.2rem; font-weight: 700; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 8px; display: flex; align-items: center; gap: 8px;}
+        
+        .btn-translate {
+            background-color: white; color: var(--primary); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s;
+        }
+        .btn-translate:hover { background-color: #e2e8f0; }
+
+        /* Main Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Sidebar Tracker */
+        .sidebar {
+            background: var(--surface);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+        
+        .sidebar h3 { border-bottom: 2px solid var(--background); padding-bottom: 10px; margin-bottom: 20px; color: var(--primary); }
+        .tracker-stats { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        .stat-item { display: flex; justify-content: space-between; font-weight: 600; padding: 10px; border-radius: 8px; background: var(--background); }
+        
+        .q-links { display: flex; flex-wrap: wrap; gap: 10px; }
+        .q-link { 
+            width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            background: var(--background); font-weight: bold; color: var(--secondary); text-decoration: none; border: 2px solid transparent; transition: 0.3s;
+        }
+        .q-link.active { background: var(--primary); color: white; }
+        .q-link.skipped { background: var(--border); color: white; text-decoration: line-through; }
+        .q-link.practical { background: var(--danger); color: white; width: auto; padding: 0 15px; border-radius: 20px; }
+
+        /* Question Cards */
+        .section-title { font-size: 1.6rem; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        
+        .question-card {
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .question-card.skipped-card {
+            opacity: 0.6;
+            filter: grayscale(100%);
+            border-top-color: var(--secondary);
+            pointer-events: none;
+        }
+        
+        /* Disable skip overlay click block except for the checkbox */
+        .question-card.skipped-card .skip-toggle { pointer-events: auto; }
+
+        .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .question-header h3 { font-size: 1.3rem; color: var(--text-main); }
+        
+        .skip-toggle {
+            display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--danger); background: #fee2e2; padding: 8px 15px; border-radius: 20px; cursor: pointer; user-select: none; transition: 0.3s;
+        }
+        .skip-toggle:hover { background: #fca5a5; }
+        .skip-toggle input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--danger); }
+        .skip-toggle.disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Content Styling */
+        .q-text { font-size: 1.1rem; margin-bottom: 20px; font-weight: 600; }
+        
+        .mcq-option {
+            display: block; padding: 15px; border: 2px solid var(--background); border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; font-weight: 600;
+        }
+        .mcq-option:hover { border-color: var(--primary-light); background: #eff6ff; }
+        .mcq-option input { margin-inline-end: 10px; transform: scale(1.2); }
+        .mcq-option.correct { background-color: #d1fae5; border-color: var(--success); color: #065f46; }
+        .mcq-option.wrong { background-color: #fee2e2; border-color: var(--danger); color: #991b1b; }
+
+        /* Solutions */
+        .btn-solution {
+            background-color: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; margin-top: 20px; transition: 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.1rem;
+        }
+        .btn-solution:hover { background-color: var(--primary); color: white; }
+
+        .solution-box {
+            display: none; background-color: #f8fafc; border: 2px dashed var(--border); border-radius: 12px; padding: 25px; margin-top: 20px; animation: slideDown 0.4s ease-out forwards;
+        }
+        .solution-box.active { display: block; }
+
+        .math-block {
+            direction: ltr; text-align: left; background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin: 15px 0; font-family: monospace; font-size: 1.2rem; overflow-x: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; text-align: center; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        th, td { border: 1px solid var(--border); padding: 12px; }
+        th { background-color: var(--primary); color: white; font-weight: 700; }
+        tr:nth-child(even) { background-color: var(--background); }
+
+        /* Language Toggle Classes */
+        .arabic-text { display: inline-block; }
+        .english-text { display: none; }
+        .en-mode .arabic-text { display: none; }
+        .en-mode .english-text { display: inline-block; }
+        .en-mode { direction: ltr; }
+
+        /* Animations */
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-brand">
+            <i class="fa-solid fa-microchip"></i>
+            <h1>
+                <span class="arabic-text">محاكي امتحان الأنظمة الرقمية</span>
+                <span class="english-text">Digital Systems Exam Simulator</span>
+            </h1>
+        </div>
+        <div class="nav-controls">
+            <div class="timer">
+                <i class="fa-regular fa-clock"></i>
+                <span id="timeDisplay">02:00:00</span>
+            </div>
+            <button class="btn-translate" onclick="toggleLanguage()">
+                <i class="fa-solid fa-language"></i> 
+                <span id="langText">English</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <!-- Sidebar Tracker -->
+        <aside class="sidebar">
+            <h3>
+                <span class="arabic-text"><i class="fa-solid fa-chart-pie"></i> حالة الامتحان</span>
+                <span class="english-text"><i class="fa-solid fa-chart-pie"></i> Exam Status</span>
+            </h3>
+            <div class="tracker-stats">
+                <div class="stat-item" style="color: var(--primary);">
+                    <span class="arabic-text">الأسئلة النظرية المطلوبة</span>
+                    <span class="english-text">Required Theory Qs</span>
+                    <span>5 / 6</span>
+                </div>
+                <div class="stat-item" style="color: var(--danger);">
+                    <span class="arabic-text">المسموح بتركها</span>
+                    <span class="english-text">Allowed to Skip</span>
+                    <span id="skipCountText">0 / 1</span>
+                </div>
+            </div>
+            <div class="q-links">
+                <a href="#q1" class="q-link" id="link-q1">1</a>
+                <a href="#q2" class="q-link" id="link-q2">2</a>
+                <a href="#q3" class="q-link" id="link-q3">3</a>
+                <a href="#q4" class="q-link" id="link-q4">4</a>
+                <a href="#q5" class="q-link" id="link-q5">5</a>
+                <a href="#q6" class="q-link" id="link-q6">6</a>
+                <a href="#q-prac" class="q-link practical"><i class="fa-solid fa-flask"></i> العملي</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <h2 class="section-title">
+                <i class="fa-solid fa-book-open"></i>
+                <span class="arabic-text">القسم الأول: النظري (35 درجة) - أجب عن 5 أسئلة (ترك واحد)</span>
+                <span class="english-text">Part One: Theory (35 Marks) - Answer 5 Questions (Skip One)</span>
+            </h2>
+
+            <!-- Q1: MCQ -->
+            <div class="question-card" id="q1">
+                <div class="question-header">
+                    <h3>Q1: Choose the correct answer (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q1')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+
+                <div class="mcq-item" data-correct="b">
+                    <p class="q-text">1. If an S-R latch has a 0 on the R input and a 1 on the S input and then the S input goes to 0, the latch will be:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="a"> (a) reset</label>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="b"> (b) set</label>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="c"> (c) invalid</label>
+                    <label class="mcq-option"><input type="radio" name="q1_1" value="d"> (d) clear</label>
+                </div>
+
+                <div class="mcq-item" data-correct="c" style="margin-top:20px;">
+                    <p class="q-text">2. The invalid state of an S-R latch occurs when:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="a"> (a) S = 0, R = 0</label>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="b"> (b) S = 0, R = 1</label>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="c"> (c) S = 1, R = 1</label>
+                    <label class="mcq-option"><input type="radio" name="q1_2" value="d"> (d) S = 1, R = 0</label>
+                </div>
+
+                <div class="mcq-item" data-correct="b" style="margin-top:20px;">
+                    <p class="q-text">3. Like the latch, the flip-flop belongs to a category of logic circuits known as:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="a"> (a) monostable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="b"> (b) bistable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="c"> (c) astable multivibrators</label>
+                    <label class="mcq-option"><input type="radio" name="q1_3" value="d"> (d) one-shots</label>
+                </div>
+
+                <div class="mcq-item" data-correct="d" style="margin-top:20px;">
+                    <p class="q-text">4. The purpose of the clock in a flip-flop is to:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="a"> (a) clear the device</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="b"> (b) allow the output to change states</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="c"> (c) always cause the output to change states</label>
+                    <label class="mcq-option"><input type="radio" name="q1_4" value="d"> (d) cause the output to assume a state dependent on the controlling (S-R, J-K) device</label>
+                </div>
+
+                <div class="mcq-item" data-correct="b" style="margin-top:20px;">
+                    <p class="q-text">5. A feature that distinguishes the J-K flip-flop from the S-R flip-flop is the:</p>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="a"> (a) type of clock</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="b"> (b) toggle condition</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="c"> (c) preset input</label>
+                    <label class="mcq-option"><input type="radio" name="q1_5" value="d"> (d) reset input</label>
+                </div>
+
+                <button class="btn-solution" onclick="checkMCQ()">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span class="arabic-text">تصحيح الاختيارات وإظهار التفسير</span>
+                    <span class="english-text">Check Answers & Show Explanation</span>
+                </button>
+
+                <div class="solution-box" id="sol-q1">
+                    <strong><i class="fa-solid fa-lightbulb"></i> <span class="arabic-text">التفسير المنطقي:</span><span class="english-text">Logical Explanation:</span></strong>
+                    <ul style="list-style-position: inside; margin-top: 10px;">
+                        <li>1. <strong>Set:</strong> When S=1 and R=0, it's Set. Returning S to 0 triggers the "Hold" state, keeping it Set.</li>
+                        <li>2. <strong>S=1, R=1:</strong> This is the invalid/forbidden state in S-R latches.</li>
+                        <li>3. <strong>Bistable:</strong> Flip flops and latches have two stable states (0 and 1).</li>
+                        <li>4. <strong>Clock purpose:</strong> Synchronizes state changes, causing the output to assume a state dependent on the controlling inputs.</li>
+                        <li>5. <strong>Toggle:</strong> J-K allows J=1, K=1 to toggle the output, solving the S-R invalid state issue.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q2: Calculations -->
+            <div class="question-card" id="q2">
+                <div class="question-header">
+                    <h3>Q2: Propagation Delay & Frequency (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q2')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+                <p class="q-text">An asynchronous binary counter is implemented using 6 flip-flops. Each flip-flop has a propagation delay $t_{pd}$ of 12 nano seconds (ns). Calculate:</p>
+                <ol style="margin-right: 25px; direction: ltr; text-align: left; font-weight: bold;">
+                    <li>The total propagation delay ($t_{p,total}$).</li>
+                    <li>The maximum clock frequency ($f_{max}$) at which the counter can be operated.</li>
+                </ol>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-q2')">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span class="arabic-text">عرض خطوات الحل الرياضي</span>
+                    <span class="english-text">Show Math Steps</span>
+                </button>
+                
+                <div class="solution-box" id="sol-q2">
+                    <div class="arabic-text">
+                        <p><strong>طريقة الحل:</strong></p>
+                        <p>بما أنه عداد غير متزامن (Asynchronous)، فإن التأخير تراكمي. نضرب عدد القلابات في زمن التأخير للقلاب الواحد.</p>
+                    </div>
+                    <div class="english-text">
+                        <p><strong>Solution Steps:</strong></p>
+                        <p>Since it is an asynchronous counter, the delay is cumulative.</p>
+                    </div>
+                    <div class="math-block">
+                        1. Total Propagation Delay ($t_{p,total}$):<br>
+                        $n = 6$ (flip-flops)<br>
+                        $t_{pd} = 12 \text{ ns}$<br>
+                        $t_{p,total} = n \times t_{pd}$<br>
+                        $t_{p,total} = 6 \times 12 \text{ ns} = \mathbf{72 \text{ ns}}$
+                    </div>
+                    <div class="math-block">
+                        2. Maximum Clock Frequency ($f_{max}$):<br>
+                        The maximum frequency is the reciprocal of the total delay time.<br>
+                        $f_{max} = \frac{1}{t_{p,total}}$<br>
+                        $f_{max} = \frac{1}{72 \text{ ns}} = \frac{1}{72 \times 10^{-9} \text{ s}}$<br>
+                        $f_{max} \approx \mathbf{13.88 \text{ MHz}}$
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3: Combinational Design -->
+            <div class="question-card" id="q3">
+                <div class="question-header">
+                    <h3>Q3: Combinational Logic Design (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q3')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+                <p class="q-text">Design a Half Subtractor (A-B) circuit. Provide its Truth Table and Boolean Expressions.</p>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-q3')">
+                    <i class="fa-solid fa-table"></i>
+                    <span class="arabic-text">عرض جدول الحقيقة والمعادلات</span>
+                    <span class="english-text">Show Truth Table & Equations</span>
+                </button>
+
+                <div class="solution-box" id="sol-q3">
+                    <h4 style="text-align:center; color: var(--primary);">Truth Table of Half-Subtractor</h4>
+                    <table>
+                        <tr>
+                            <th colspan="2">Inputs</th>
+                            <th colspan="2">Outputs</th>
+                        </tr>
+                        <tr>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>Difference (D)</th>
+                            <th>Borrow ($B_{out}$)</th>
+                        </tr>
+                        <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                        <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                        <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                    </table>
+
+                    <div class="arabic-text"><p><strong>المعادلات المنطقية:</strong></p></div>
+                    <div class="english-text"><p><strong>Boolean Expressions:</strong></p></div>
+                    <div class="math-block">
+                        Difference ($D$):<br>
+                        $D = \overline{A}B + A\overline{B} = A \oplus B$<br><br>
+                        Borrow ($B_{out}$):<br>
+                        $B_{out} = \overline{A}B$
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q4: Counters Design -->
+            <div class="question-card" id="q4">
+                <div class="question-header">
+                    <h3>Q4: Counters Design (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q4')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+                <p class="q-text">Design a 2-bit synchronous counter that can be implemented having a modulus of three Mod (3). Using J-K Flipflop.</p>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-q4')">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span class="arabic-text">عرض خطوات التصميم</span>
+                    <span class="english-text">Show Design Steps</span>
+                </button>
+
+                <div class="solution-box" id="sol-q4">
+                    <div class="arabic-text"><p><strong>الخطوة 1: جدول الحالة والإثارة (State & Excitation Table)</strong></p></div>
+                    <div class="english-text"><p><strong>Step 1: State & Excitation Table</strong></p></div>
+                    <p style="direction: ltr; text-align: left;">Mod 3 counts: 00 $\rightarrow$ 01 $\rightarrow$ 10 $\rightarrow$ 00.</p>
+                    
+                    <table>
+                        <tr>
+                            <th colspan="2">Present State</th>
+                            <th colspan="2">Next State</th>
+                            <th colspan="2">FF1 Inputs</th>
+                            <th colspan="2">FF0 Inputs</th>
+                        </tr>
+                        <tr>
+                            <th>$Q_1$</th><th>$Q_0$</th>
+                            <th>$Q_1(next)$</th><th>$Q_0(next)$</th>
+                            <th>$J_1$</th><th>$K_1$</th>
+                            <th>$J_0$</th><th>$K_0$</th>
+                        </tr>
+                        <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>X</td><td>1</td><td>X</td></tr>
+                        <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>X</td><td>X</td><td>1</td></tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>X</td><td>1</td><td>0</td><td>X</td></tr>
+                        <tr><td>1</td><td>1</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td><td>X</td></tr>
+                    </table>
+
+                    <div class="arabic-text"><p><strong>الخطوة 2: استخراج المعادلات من كارنوف ماب</strong></p></div>
+                    <div class="english-text"><p><strong>Step 2: Derive Equations (K-Map)</strong></p></div>
+                    <div class="math-block">
+                        $J_0 = \overline{Q_1}$<br>
+                        $K_0 = 1$<br><br>
+                        $J_1 = Q_0$<br>
+                        $K_1 = 1$
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q5: Decoders & Encoders -->
+            <div class="question-card" id="q5">
+                <div class="question-header">
+                    <h3>Q5: Decoders & Encoders (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q5')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+                <p class="q-text">Design a (2-to-4) line decoder circuit. Provide its Truth Table and Boolean Expressions.</p>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-q5')">
+                    <i class="fa-solid fa-list"></i>
+                    <span class="arabic-text">عرض الحل</span>
+                    <span class="english-text">Show Solution</span>
+                </button>
+
+                <div class="solution-box" id="sol-q5">
+                    <table>
+                        <tr>
+                            <th colspan="2">Inputs</th>
+                            <th colspan="4">Outputs</th>
+                        </tr>
+                        <tr>
+                            <th>A</th><th>B</th>
+                            <th>$D_0$</th><th>$D_1$</th><th>$D_2$</th><th>$D_3$</th>
+                        </tr>
+                        <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+                    </table>
+
+                    <div class="math-block">
+                        $D_0 = \overline{A} \cdot \overline{B}$<br>
+                        $D_1 = \overline{A} \cdot B$<br>
+                        $D_2 = A \cdot \overline{B}$<br>
+                        $D_3 = A \cdot B$
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6: Latch Design (Added to complete the 6 questions) -->
+            <div class="question-card" id="q6">
+                <div class="question-header">
+                    <h3>Q6: Sequential Logic Gates (7 Marks)</h3>
+                    <label class="skip-toggle" onclick="event.stopPropagation();">
+                        <input type="checkbox" onchange="handleSkip(this, 'q6')"> 
+                        <span class="arabic-text">ترك السؤال</span><span class="english-text">Skip</span>
+                    </label>
+                </div>
+                <p class="q-text">Using NAND gates only to design D flip-flops with truth table.</p>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-q6')">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span class="arabic-text">عرض التصميم وجدول الحقيقة</span>
+                    <span class="english-text">Show Design & Truth Table</span>
+                </button>
+
+                <div class="solution-box" id="sol-q6">
+                    <div class="arabic-text">
+                        <p><strong>شرح التصميم:</strong></p>
+                        <p>يتم بناء (D Flip-Flop) باستخدام قلاب (S-R Gated Latch) مكوّن من بوابات NAND، مع توصيل المدخل S كـ D، والمدخل R يكون عكس D (موصول ببوابة NOT التي يمكن بناؤها أيضاً من NAND).</p>
+                    </div>
+                    <div class="english-text">
+                        <p><strong>Design Explanation:</strong></p>
+                        <p>A D Flip-Flop is built using a NAND-based S-R Gated Latch, where the S input is connected directly to D, and the R input receives the inverted D signal.</p>
+                    </div>
+                    <h4 style="margin-top: 15px; color: var(--primary);">Truth Table of D Flip-Flop</h4>
+                    <table>
+                        <tr>
+                            <th colspan="2">Inputs</th>
+                            <th colspan="2">Outputs</th>
+                            <th>Comments</th>
+                        </tr>
+                        <tr>
+                            <th>CLK / EN</th><th>D</th>
+                            <th>$Q(t+1)$</th><th>$Q'(t+1)$</th>
+                            <th>State</th>
+                        </tr>
+                        <tr><td>0</td><td>X</td><td>$Q(t)$</td><td>$Q'(t)$</td><td>No Change (Hold)</td></tr>
+                        <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>Reset</td></tr>
+                        <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>Set</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- القسم العملي -->
+            <h2 class="section-title" id="q-prac" style="margin-top: 50px; color: var(--danger); border-bottom-color: var(--danger);">
+                <i class="fa-solid fa-flask-vial"></i>
+                <span class="arabic-text">القسم الثاني: العملي (15 درجة) - إجباري</span>
+                <span class="english-text">Part Two: Practical (15 Marks) - Mandatory</span>
+            </h2>
+
+            <div class="question-card" style="border-top-color: var(--danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);">
+                <div class="question-header">
+                    <h3 style="color: var(--danger);">Practical: De Morgan's Theorem</h3>
+                    <span style="background: var(--danger); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
+                        <span class="arabic-text">لا يمكن تركه</span><span class="english-text">Cannot Skip</span>
+                    </span>
+                </div>
+                <p class="q-text"><span class="arabic-text">اشرح نظرية دي مورغان (De Morgan's Theorem) واكتب القوانين مع جداول الحقيقة للدائرة الأصلية والمكافئة.</span><span class="english-text">Explain De Morgan's Theorem, write the laws, and provide truth tables for original and equivalent circuits.</span></p>
+                
+                <button class="btn-solution" onclick="toggleSol('sol-practical')" style="border-color: var(--danger); color: var(--danger);">
+                    <i class="fa-solid fa-microscope"></i>
+                    <span class="arabic-text">عرض الحل العملي التفصيلي</span>
+                    <span class="english-text">Show Detailed Practical Solution</span>
+                </button>
+
+                <div class="solution-box" id="sol-practical">
+                    <div class="arabic-text">
+                        <p>تُستخدم نظرية دي مورغان لتحويل عمليات العكس المنطقية بين AND و OR والعكس. وهي مفيدة جداً في تبسيط الدوائر المنطقية.</p>
+                        <p><strong>خلاصة:</strong></p>
+                        <ul>
+                            <li>عكس ناتج AND يساوي OR للمدخلات المعكوسة.</li>
+                            <li>عكس ناتج OR يساوي AND للمدخلات المعكوسة.</li>
+                        </ul>
+                    </div>
+                    <div class="english-text">
+                        <p>Used to convert logical inversions between AND and OR. Very useful for simplifying logic circuits.</p>
+                        <p><strong>Summary:</strong></p>
+                        <ul>
+                            <li>Inverted AND output equals OR of inverted inputs.</li>
+                            <li>Inverted OR output equals AND of inverted inputs.</li>
+                        </ul>
+                    </div>
+                    
+                    <h4 style="margin-top: 25px; color: var(--primary);">قانون دي مورغان الأول (NAND = Bubbled OR)</h4>
+                    <div class="math-block" style="text-align: center; font-size: 1.4rem;">
+                        $\overline{A \cdot B} = \overline{A} + \overline{B}$
+                    </div>
+                    <table>
+                        <tr>
+                            <th>B</th><th>A</th>
+                            <th style="background:#f1f5f9; color:var(--text-main);">Original (NAND): $Y = \overline{AB}$</th>
+                            <th>$\overline{A}$</th><th>$\overline{B}$</th>
+                            <th style="background:#f1f5f9; color:var(--text-main);">Equivalent: $Y = \overline{A} + \overline{B}$</th>
+                        </tr>
+                        <tr><td>0</td><td>0</td><td style="font-weight:bold;">1</td><td>1</td><td>1</td><td style="font-weight:bold;">1</td></tr>
+                        <tr><td>0</td><td>1</td><td style="font-weight:bold;">1</td><td>0</td><td>1</td><td style="font-weight:bold;">1</td></tr>
+                        <tr><td>1</td><td>0</td><td style="font-weight:bold;">1</td><td>1</td><td>0</td><td style="font-weight:bold;">1</td></tr>
+                        <tr><td>1</td><td>1</td><td style="font-weight:bold;">0</td><td>0</td><td>0</td><td style="font-weight:bold;">0</td></tr>
+                    </table>
+
+                    <h4 style="margin-top: 25px; color: var(--primary);">قانون دي مورغان الثاني (NOR = Bubbled AND)</h4>
+                    <div class="math-block" style="text-align: center; font-size: 1.4rem;">
+                        $\overline{A + B} = \overline{A} \cdot \overline{B}$
+                    </div>
+                    <table>
+                        <tr>
+                            <th>B</th><th>A</th>
+                            <th style="background:#f1f5f9; color:var(--text-main);">Original (NOR): $Y = \overline{A+B}$</th>
+                            <th>$\overline{A}$</th><th>$\overline{B}$</th>
+                            <th style="background:#f1f5f9; color:var(--text-main);">Equivalent: $Y = \overline{A} \cdot \overline{B}$</th>
+                        </tr>
+                        <tr><td>0</td><td>0</td><td style="font-weight:bold;">1</td><td>1</td><td>1</td><td style="font-weight:bold;">1</td></tr>
+                        <tr><td>0</td><td>1</td><td style="font-weight:bold;">0</td><td>0</td><td>1</td><td style="font-weight:bold;">0</td></tr>
+                        <tr><td>1</td><td>0</td><td style="font-weight:bold;">0</td><td>1</td><td>0</td><td style="font-weight:bold;">0</td></tr>
+                        <tr><td>1</td><td>1</td><td style="font-weight:bold;">0</td><td>0</td><td>0</td><td style="font-weight:bold;">0</td></tr>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- Skip Logic Handling ---
+        let skippedCount = 0;
+        const MAX_SKIP = 1;
+
+        function handleSkip(checkbox, qId) {
+            const card = document.getElementById(qId);
+            const sidebarLink = document.getElementById('link-' + qId);
+            const allCheckboxes = document.querySelectorAll('.skip-toggle input[type="checkbox"]');
+            
+            if (checkbox.checked) {
+                if (skippedCount >= MAX_SKIP) {
+                    checkbox.checked = false; // Prevent checking if limit reached
+                    return;
+                }
+                // Apply Skip
+                card.classList.add('skipped-card');
+                sidebarLink.classList.add('skipped');
+                skippedCount++;
+            } else {
+                // Remove Skip
+                card.classList.remove('skipped-card');
+                sidebarLink.classList.remove('skipped');
+                skippedCount--;
+            }
+
+            // Update UI tracker text
+            document.getElementById('skipCountText').innerText = `${skippedCount} / ${MAX_SKIP}`;
+
+            // Disable other checkboxes if max reached
+            allCheckboxes.forEach(cb => {
+                if (!cb.checked) {
+                    const parent = cb.parentElement;
+                    if (skippedCount >= MAX_SKIP) {
+                        cb.disabled = true;
+                        parent.classList.add('disabled');
+                    } else {
+                        cb.disabled = false;
+                        parent.classList.remove('disabled');
+                    }
+                }
+            });
+        }
+
+        // --- Toggle Solutions ---
+        function toggleSol(id) {
+            const sol = document.getElementById(id);
+            sol.classList.toggle('active');
+            
+            // Re-render MathJax if it's the first time displaying
+            if(window.MathJax) {
+                MathJax.typesetPromise([sol]).catch((err) => console.log(err.message));
+            }
+        }
+
+        // --- Check MCQ Answers ---
+        function checkMCQ() {
+            const mcqItems = document.querySelectorAll('.mcq-item');
+            let allAnswered = true;
+
+            mcqItems.forEach(item => {
+                const correctVal = item.getAttribute('data-correct');
+                const options = item.querySelectorAll('.mcq-option');
+                let answered = false;
+                
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'wrong');
+                    const radio = opt.querySelector('input');
+                    
+                    if (radio.checked) {
+                        answered = true;
+                        if (radio.value === correctVal) {
+                            opt.classList.add('correct');
+                        } else {
+                            opt.classList.add('wrong');
+                        }
+                    }
+                    // Always show correct answer
+                    if (radio.value === correctVal) {
+                        opt.classList.add('correct');
+                    }
+                });
+            });
+            
+            toggleSol('sol-q1');
+            document.getElementById('link-q1').classList.add('active'); // Mark as done in tracker
+        }
+
+        // --- Language Toggle ---
+        let isEnglish = false;
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            const htmlTag = document.documentElement;
+            const langText = document.getElementById('langText');
+            
+            if (isEnglish) {
+                htmlTag.classList.add('en-mode');
+                langText.innerText = "العربية";
+            } else {
+                htmlTag.classList.remove('en-mode');
+                langText.innerText = "English";
+            }
+        }
+
+        // --- Exam Timer Simulation ---
+        function startTimer(durationInSeconds) {
+            let timer = durationInSeconds, hours, minutes, seconds;
+            const display = document.getElementById('timeDisplay');
+            
+            setInterval(function () {
+                hours   = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = hours + ":" + minutes + ":" + seconds;
+
+                // Change color if time is running out (under 10 mins)
+                if (timer < 600) { display.style.color = "#fca5a5"; }
+
+                if (--timer < 0) { timer = 0; }
+            }, 1000);
+        }
+
+        // Start timer for 2 hours (7200 seconds)
+        window.onload = function () {
+            startTimer(7200);
+        };
+    </script>
+</body>
+</html>
